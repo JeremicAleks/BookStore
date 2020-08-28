@@ -1,0 +1,48 @@
+package com.internship.bookstore.controller;
+
+import com.internship.bookstore.dto.AddCategoryDTO;
+import com.internship.bookstore.service.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("api/categories")
+@CrossOrigin(origins = "*")
+public class CategoryController {
+
+	@Autowired
+	CategoryService categoryService;
+
+	@GetMapping
+	public ResponseEntity<?> getAllCategories() {
+		return ResponseEntity.ok(categoryService.findAllCategories());
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<?> getCategory(@PathVariable Long id) {
+		return ResponseEntity.ok(categoryService.getOne(id));
+	}
+
+	@PreAuthorize(value = "hasAuthority('ADMIN') or hasRole('ADMIN')")
+	@PostMapping
+	public ResponseEntity<?> addCategory(@RequestBody @Validated AddCategoryDTO addCategoryDTO) {
+		return new ResponseEntity<>(categoryService.addCategory(addCategoryDTO), HttpStatus.CREATED);
+	}
+
+	@PreAuthorize(value = "hasAuthority('ADMIN') or hasRole('ADMIN')")
+	@PutMapping("/{id}")
+	public ResponseEntity<?> updateCategory(@RequestBody @Validated AddCategoryDTO addCategoryDTO, @PathVariable Long id) {
+		return ResponseEntity.ok(categoryService.updateCategory(addCategoryDTO, id));
+	}
+
+	@PreAuthorize(value = "hasAuthority('ADMIN') or hasRole('ADMIN')")
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
+		return ResponseEntity.ok(categoryService.deleteCategory(id));
+	}
+
+}

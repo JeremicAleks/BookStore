@@ -1,0 +1,165 @@
+<!-- Page Content -->
+<div class="container">
+  <div class="row">
+    <div class="col-lg-2">
+      <div class="input-group">
+        <input
+          type="text"
+          name="search"
+          name="model"
+          class="form-control"
+          placeholder="Search title/author"
+          #bookSearchInput
+        />
+      </div>
+      <h3><i>Categories</i></h3>
+      <!-- <div class="pre-scrollable"> -->
+      <nav>
+        <input type="checkbox" name="categoryId" [(ngModel)]="masterSelected" value="m1" (change)="getAllBooks()" checked />
+        All
+        <fieldset *ngFor="let category of categoryData.categories">
+          <input
+            type="checkbox"
+            name="categoryName"
+            [value]="category.categoryId"
+            [(ngModel)]="category.checked"
+            (ngModelChange)="getBooksFilter()"
+          />
+          {{ category.name }}
+        </fieldset>
+      </nav>
+    </div>
+    <!-- /.col-lg-3 -->
+
+    <div class="col-lg-8">
+      <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner" role="listbox">
+          <div class="carousel-item active">
+            <img class="d-block img-fluid" src="assets/slider/bookstore1.jpg" alt="First slide" />
+          </div>
+          <div class="carousel-item">
+            <img class="d-block img-fluid" src="assets/slider/bookstore2.jpg" alt="Second slide" />
+          </div>
+          <div class="carousel-item">
+            <img class="d-block img-fluid" src="assets/slider/bookstore3.jpg" alt="Third slide" />
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+
+      <div class="row">
+        <ng-container *ngFor="let book of bookData.books">
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100">
+              <a href="#"><img class="card-img-top" src="assets/book.png" width="60" height="150" alt="" /></a>
+              <div class="card-body">
+                <h4 class="card-title">
+                  <span style="color:#17a2b8;">{{ book.name }}</span>
+                </h4>
+                <h5>${{ book.price }}</h5>
+                <div *ngIf="book.authors.length > 1">
+                  <h6>Authors:</h6>
+                  <div *ngFor="let author of book.authors" class="circle-style">
+                    &nbsp;<i>{{ author.firstName }} {{ author.lastName }}</i>
+                  </div>
+                </div>
+                <div *ngIf="book.authors.length == 1">
+                  <h6>Author:</h6>
+                  <i>{{ book.authors[0].firstName
+                    }} {{ book.authors[0].lastName }}</i>
+                </div>
+                <div *ngIf="book.categories.length > 1">
+                  <h6>Categories:</h6>
+                  <div *ngFor="let category of book.categories">
+                    &nbsp;<i>{{ category.name }}</i>
+                  </div>
+                </div>
+                <div *ngIf="book.categories.length === 1">
+                  <h6>Category:</h6>
+                  <i>{{ book.categories[0].name }}</i>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button *ngIf="authService.isUser()" type="button" style="float: left;" class="btn btn-danger btn-sm" data-toggle="modal"
+                  data-target="#exampleModalCenter" (click)="buyBook(book)">
+                  Buy Now
+                </button>
+                <a class="btn btn-info btn-sm" *ngIf="authService.isAdmin()" routerLink="admin/update-book/{{ book.bookId }}"><span>Update</span></a>
+                <button *ngIf="activeAddToCart.includes(book.bookId) && !authService.isAdmin()" type="button" style="float: right;"
+                  class="text-light btn btn-warning btn-sm" (click)="onAddToCart(book)">
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.col-lg-9 -->
+
+    <!-- col-lg-2 ::START -->
+    <div class="col-lg-2">
+      <!-- <div class="pre-scrollable"> -->
+      <nav>
+        <div class="list-group from-da-top">
+          <h4>Top Selling Books</h4>
+          <div *ngIf="errorMessage" class="alert alert-warning">
+            <strong>Warning!</strong> {{errorMessage}}
+          </div>
+          <ng-container *ngFor="let tsb of topSellingBookData.topSellingBookList; let i=index">
+            <div *ngIf="tsb.authors.length > 1" class="list-group-item">
+              {{i+1}}. <span class="topselling">"{{tsb.bookName}}"</span> by <i>(mulitple authors)</i> sold {{tsb.amount}} copies
+            </div>
+            <div *ngIf="tsb.authors.length == 1" class="list-group-item">
+              {{i+1}}. <span class="topselling">"{{tsb.bookName}}"</span> by <i>{{tsb.authors[0].firstName}} {{tsb.authors[0].lastName}}</i> sold {{tsb.amount}} copies
+            </div>
+          </ng-container>
+        </div>
+      </nav>
+    </div>
+    <!-- /.col-lg-2 -->
+
+  </div>
+  <!-- /.row -->
+</div>
+
+<!-- Modal Success Order -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exampleModalLongTitle">Payment information</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="errorOrder" class="c-flash_icon c-flash_icon--error animate font-normal"><span class="x-mark"><span
+              class="line left"></span><span class="line right"></span></span></div>
+        <div *ngIf="successOrder" class="c-flash_icon c-flash_icon--success animate font-normal"><span
+            class="line tip"></span><span class="line long"></span>
+          <div class="placeholder"></div>
+          <div class="fix"></div>
+        </div>
+        <i>{{message}}</i>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

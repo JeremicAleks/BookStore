@@ -1,0 +1,113 @@
+<!--<div style="margin-top: 60px">-->
+<div class="container">
+
+<table class="table" style="margin-top: 60px">
+  <thead class="thead-light">
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Name</th>
+    <th scope="col">Edit</th>
+    <th scope="col">Delete</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let cat of categoryData.categories ; let i =index " >
+    <th scope="row">{{i+1}}</th>
+    <td>{{cat.name}}</td>
+    <td><button class="btn btn-primary" title="View" data-toggle="modal" data-target="#exampleModalCenter" (click)="editDialogOpen(cat)"><i class="glyphicon glyphicon-pencil" ></i><span class="hidden-xs"> Edit</span></button></td>
+    <td><button class="btn btn-danger" title="Delete" (click)="deleteCategory(cat.categoryId,i)"><i class="glyphicon glyphicon-trash" ></i><span class="hidden-xs"> Delete</span> </button></td>
+  </tr>
+
+</table>
+  <button style="float: right; margin-right: 200px" class="btn btn-primary" title="View" data-toggle="modal" data-target="#exampleModalCenterADD"><i class="glyphicon glyphicon-pencil" ></i><span class="hidden-xs"> <h5>Add category</h5> </span></button>
+
+
+</div>
+
+<!-- Modal UPDATE -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exampleModalLongTitle">Edit category</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #updateBookForm="ngForm">
+          <div>
+            <label for="name" style="width: 100px">Name<span class="req-field">&nbsp;*</span></label>
+            <input
+              type="text"
+              name="name"
+              [(ngModel)]="category.name"
+              id="name"
+              #name="ngModel"
+              class="fadeIn second"
+              placeholder="Name"
+              required
+            />
+            <span
+              class="validation-message"
+              style="text-align: justify; display:block;"
+              *ngIf="name.errors?.required && name.touched"
+              class="text-danger"
+            >Name is required</span
+            >
+          </div>
+
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button *ngIf="authService.isAdmin()" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button *ngIf="authService.isAdmin()" type="button" class="btn btn-primary" (click)="updateCategory(category)">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal ADD -->
+<div class="modal fade" id="exampleModalCenterADD" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exampleModalLongTitleADD">Add new category</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #updateBookForm="ngForm">
+          <div><label for="nameAdd" style="width: 100px">Name<span class="req-field">&nbsp;*</span></label>
+            <input
+              type="text"
+              name="name"
+              [(ngModel)]="addCat.name"
+              id="nameAdd"
+              #name="ngModel"
+              class="fadeIn second"
+              placeholder="Name"
+              required
+            />
+            <span
+              class="validation-message"
+              style="text-align: justify; display:block;"
+              *ngIf="name.errors?.required && name.touched"
+              class="text-danger"
+            >Name is required</span
+            >
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="addCategory(addCat)">Add category</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

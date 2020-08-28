@@ -1,0 +1,138 @@
+<div class="wrapper">
+  <div class="formContent">
+    <div class="fadeIn first">
+      <h2>Update book</h2>
+    </div>
+    <form #updateBookForm="ngForm">
+      <div>
+        <input
+          type="text"
+          name="name"
+          [(ngModel)]="bookData.name"
+          id="name"
+          #name="ngModel"
+          class="fadeIn second"
+          placeholder="Title"
+          required
+        />
+        <span
+          class="validation-message"
+          style="text-align: justify; display:block;"
+          *ngIf="name.errors?.required && name.touched"
+          class="text-danger"
+          >Title is required</span
+        >
+      </div>
+      <div>
+        <input
+          type="text"
+          name="price"
+          [(ngModel)]="bookData.price"
+          id="price"
+          #price="ngModel"
+          class="fadeIn second"
+          placeholder="Price"
+          required
+        />
+        <span
+          class="validation-message"
+          style="text-align: justify; display:block;"
+          *ngIf="price.errors?.required && price.touched"
+          class="text-danger"
+          >Price is required</span
+        >
+      </div>
+      <div>
+        <input
+          type="number"
+          name="amount"
+          [(ngModel)]="bookData.amount"
+          id="amount"
+          #amount="ngModel"
+          class="fadeIn second"
+          placeholder="Amount"
+          required
+        />
+        <span
+          class="validation-message"
+          style="text-align: justify; display:block;"
+          *ngIf="amount.errors?.required && amount.touched"
+          class="text-danger"
+          >Amount is required</span
+        >
+      </div>
+      <div>
+        <label for="authors">Choose author(s):</label>
+        <select
+          name="authors"
+          class="form-control"
+          multiple
+          (change)="onChangeAuthor($event.target)"
+          [(ngModel)]="bookData.authorIds"
+          #authors="ngModel"
+          required
+        >
+          >
+          <option
+            *ngFor="let author of authorData.authors"
+            [value]="author.authorId"
+            >{{ author.firstName }} {{ author.lastName }}</option
+          >
+        </select>
+        <span
+          class="validation-message"
+          style="text-align: justify; display:block;"
+          *ngIf="authors.errors?.required && authors.touched"
+          class="text-danger"
+          >Author is required</span
+        >
+      </div>
+      <div>
+        <label for="categories">Choose category(s):</label>
+        <select
+          name="categories"
+          class="form-control"
+          multiple
+          (change)="onChangeCategory($event.target)"
+          [(ngModel)]="bookData.categoryIds"
+          #categories="ngModel"
+          required
+        >
+          <option
+            *ngFor="let category of categoryData.categories"
+            [ngValue]="category.categoryId"
+            >{{ category.name }}
+          </option>
+        </select>
+        <span
+          class="validation-message"
+          style="text-align: justify; display:block;"
+          *ngIf="categories.errors?.required && categories.touched"
+          class="text-danger"
+          >Category is required</span
+        >
+      </div>
+
+      <div class="funkyradio">
+        <div class="funkyradio-primary">
+          <input
+            type="checkbox"
+            name="deleted"
+            id="deleted"
+            [(ngModel)]="bookData.deleted"
+            (change)="onChangeStatus(bookData.deleted)"
+          />
+          <label for="deleted"> {{active}} </label>
+        </div>
+      </div>
+
+      <button
+        [disabled]="!updateBookForm.valid"
+        class="fadeIn"
+        (click)="onUpdateBook()"
+      >
+        Update
+      </button>
+    </form>
+  </div>
+</div>

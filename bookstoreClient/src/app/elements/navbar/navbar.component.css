@@ -1,0 +1,45 @@
+#ex4 .p1[data-count]:after {
+  position: absolute;
+  right: 10%;
+  top: 8%;
+  content: attr(data-count);
+  font-size: 60%;
+  padding: 0.2em;
+  border-radius: 50%;
+  line-height: 1em;
+  color: white;
+  background: rgba(255, 0, 0, .85);
+  text-align: center;
+  min-width: 1em;
+}
+.fa-2x {
+  font-size: 21px;
+}
+.boja{
+  color: white;
+}
+
+.no-click {
+  pointer-events: none;
+}
+
+
+#ex1 .badge:after {
+  content: "100";
+  position: absolute;
+  background: rgba(0, 0, 255, 1);
+  height: 2rem;
+  top: 1rem;
+  right: 1.5rem;
+  width: 2rem;
+  text-align: center;
+  line-height: 2rem;
+  font-size: 1rem;
+  border-radius: 50%;
+  color: white;
+  border: 1px solid blue;
+}
+
+button.btn-link {
+  color: rgba(255,255,255,.5);
+}
